@@ -93,15 +93,28 @@ class menus implements StorableObject
 		}
 
 		if ( empty($container) ) {
+
 			foreach ($menu as $el) {
-				if ( isset($el['childs'])) {
-					$menu_html .= '<a href='.$el['link'].' class="menu_link">'.$el['item_title'].'</a>'.$add_separator;
-					$menu_html .= self::genMenu($el['childs'], $container, $separator,$menu_html);
+				if (next($menu)) 
+				{
+					if ( isset($el['childs'])) {
+						$menu_html .= '<a href='.$el['link'].' class="menu_link">'.$el['item_title'].'</a>'.$add_separator;
+						$menu_html .= self::genMenu($el['childs'], $container, $separator,$menu_html);
+					} else {
+						$menu_html .= '<a href='.$el['link'].' class="menu_link">'.$el['item_title'].'</a>'.$add_separator;
+					}
 				} else {
-					$menu_html .= '<a href='.$el['link'].' class="menu_link">'.$el['item_title'].'</a>'.$add_separator;
+					if ( isset($el['childs'])) {
+						$menu_html .= '<a href='.$el['link'].' class="menu_link">'.$el['item_title'].'</a>';
+						$menu_html .= self::genMenu($el['childs'], $container, $separator,$menu_html);
+					} else {
+						$menu_html .= '<a href='.$el['link'].' class="menu_link">'.$el['item_title'].'</a>';
+					}
 				}
 			}
+
 		} else {
+
 			switch ( $container ) {
 				case 'ul':
 					$item_container = 'li';
@@ -132,7 +145,7 @@ class menus implements StorableObject
 			$menu_html = '</'.$container.'>';
 		}
 
-
+		
 		return $menu_html;
 
 
