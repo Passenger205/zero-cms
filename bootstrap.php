@@ -12,6 +12,7 @@ try {
 } catch (surlException $e) {
 	handler::httpError(404);
 }
+
 // действие по умолчанию
 if (empty($url_data))
 {
@@ -41,6 +42,7 @@ if ( $try_module ) {
 
 // выводим сформированнаый контент
 config::$global_cms_vars['PAGE'] = template::loadTemplate($request_template, config::$global_cms_vars);
+
 echo config::$global_cms_vars['PAGE'];
 
 

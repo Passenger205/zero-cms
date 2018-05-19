@@ -8,13 +8,15 @@ class config implements StorableObject
 {
 	private static $className = 'Конфиг';
 
+
 	public static $site_name = 'Zero-Cms';
+
 
 	public static $database = array (
 		'host' 	 => '127.0.0.1',
 		'dbname' => 'zero-cms',
 		'user'	 => 'root',
-		'pass'	 => '123',
+		'pass'	 => '',
 		'charset'=> 'utf8',
 		'opt' 	 => array(
 		        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -23,17 +25,20 @@ class config implements StorableObject
 		),
 	);
 
+
 	public static $template = [
 				'tmpl_dir'  => 'templates',
 				'tmpl_name' => 'Conversion',
 	];
 
+
 	public static $s_url = true; // Семантические ссылки [true/false]
+
 
 	public static $global_cms_vars = array();
 
-	public static $strip_posts = 200;
 
+	public static $strip_posts = 200;
 
 	function __construct()
 	{

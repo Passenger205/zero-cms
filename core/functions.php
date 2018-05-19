@@ -43,18 +43,22 @@ class functions implements StorableObject
 		}
 	}
 
-	public static function dump($var, $full = true)
+	public static function dump($var, $full = false)
 	{
 		if ( $full )
 		{
 			?>
 			<div style="padding: 10px; width: 80%; margin: 10px auto; background: #fff; border: 3px solid #FF0000;">
-				<?=var_dump($var)?>
+			<p style="font-size: 15px;"><b>VAR_DUMP</b></p>
+				<pre>
+					<?php var_dump($var) ?>
+				</pre>
 			</div>
 			<?php
 		} else {
 			?>
 			<div style="padding: 10px; width: 80%; margin: 10px auto; background: #fff; border: 3px solid #FF0000;">
+				<p style="font-size: 15px;"><b>PRINT_R</b></p>
 				<pre>
 				<?=print_r($var)?>
 				</pre>

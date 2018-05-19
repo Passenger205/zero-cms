@@ -34,14 +34,13 @@ class surl implements StorableObject
 
 		// получаем алиас (если есть)
 		$db = new database;
-
 		$sql = "SELECT * FROM `aliases` WHERE `alias` = '" . trim($request_uri, ' /') . "'";
 		$query_alias = $db->query($sql);
 
 		$db->disconnect();
 
 		$alias = $query_alias->fetch();
-
+		
 		if ( $alias ) {
 			$request_uri = $alias['address'];
 		}

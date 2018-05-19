@@ -9,7 +9,10 @@ class modules implements StorableObject
 	private static $className = 'Модули';
 
 
-	public static function getModule($module)
+	/**
+	* @return [string] Возвращает путь к модули или false
+	**/
+	public static function getModule( $module )
 	{
 		if ( file_exists('./includes/modules/custom/'.$module.'/'.$module.'.inc') )
 			return './includes/modules/custom/'.$module.'/'.$module.'.inc';
@@ -19,6 +22,13 @@ class modules implements StorableObject
 			return false;
 	}
 
+
+	/**
+	 * Проверяет отключен ли данный модуль(список из конфига)
+	 */
+	public static function ignoreList( $module )
+	{
+	}
 
 	public static function getClassName()
 	{
