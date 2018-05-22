@@ -44,6 +44,49 @@ class template implements StorableObject
 		return $template_part;
 	}
 
+	private static function loadStyles( $styles )
+	{
+		$tmpl = config::$template;
+
+		if ( count($styles) > 0 ) 
+		{
+			foreach ($styles as $style => $media) 
+			{
+				$system_styles['/' . $tmpl . $style] = $media;
+			}
+		}
+
+		self::$template_vars['STYLES'] = null;
+		foreach ($styles as $style => $media)  
+		{
+			self::$template_vars['STYLES'] .= '<link type="text/css" rel="stylesheet" '.(!empty($media) ? 'media="'.trim($media).'"' : null).' href="'.config::getPath('templates',true) . '/' . $tmpl . $style .'">';
+		}
+	}
+
+
+	private static function loadScripts( $scripts ) 
+	{
+		$tmpl = config::$template;
+
+		if ( count($scripts) > 0 )
+		{
+			foreach ($scripts as $script => $in_footer) {
+				$system_scripts['/' . $tmpl . $script] = $in_footer;
+			}
+		}
+
+		self::$template_vars['HEADER_SCRIPTS'] = null;
+		self::$template_vars['FOOTER_SCRIPTS'] = null;
+
+		foreach ($system_scripts as $script => $in_footer) {
+			if ( $in_footer ) {
+				self::$template_vars['FOOTER_SCRIPTS'] .= '<script type="text/javascript" src="'.config::getPath('templates',true).$script.'"></script>';
+			} else {
+				self::$template_vars['HEADER_SCRIPTS'] .= '<script type="text/javascript" src="'.config::getPath('templates',true).$script.'"></script>';
+			}
+		}
+	}
+
 
 	private static function parseTemplate()
 	{
@@ -74,48 +117,51 @@ class template implements StorableObject
 	 */
 	public static function loadTemplate( $page, $vars, $fast = false )
 	{
-		$data = config::$template;
-		
-		if ( !empty($data['tmpl_dir']) && !empty($data['tmpl_name']) )
+		$tmpl_name = config::$template;
+		if ( !empty($tmpl_name) )
 		{
-			if ($fast)
+			if ( $fast )
 			{
-				if ( file_exists('./' . $data['tmpl_dir'] . '/' . $data['tmpl_name'] . '/' . $data['tmpl_name'] . '.php') )
+				if ( file_exists(config::getPath('templates') . '/' . $tmpl_name . '/' . $page . '.tpl') )
 
 				{
-					self::$template_dir = './' . $data['tmpl_dir'] . '/' . $data['tmpl_name'] . '/';
-					require self::$template_dir . $data['tmpl_name'] . '.php';
-					
+
+					// require self::$template_dir . $data['tmpl_name'] . '.php';
+					self::$template_dir = config::getPath('templates') . '/' . $tmpl_name . '/';
 					self::$template_page  = $page;
-					self::$template_parts = $t_files;
 					self::$template_vars  = $vars;
 					self::getTemplate($fast);
 					self::parseTemplate();
 					
 
 					return self::$template;
+
 				} else {
 					throw new tmplException(
-						'Error template not found (' . './' . $data['tmpl_dir'] . '/' . $data['tmpl_name'] . '/' . $data['tmpl_name'] . '.php' .');'
+						'Error template not found ( ' . config::getPath('templates') . '/' . $tmpl_name . '/' . $page . '.tpl );<br>'. __FILE__ .' ( '. __LINE__ . ' )'
 					);
 				}
 			}
 			else
 			{
-				if ( file_exists('./' . $data['tmpl_dir'] . '/' . $data['tmpl_name'] . '/' . $data['tmpl_name'] . '.php') )
+				if ( file_exists(config::getPath('templates') . '/' . $tmpl_name . '/' . $tmpl_name . '.php') )
 				{
-					self::$template_dir = './' . $data['tmpl_dir'] . '/' . $data['tmpl_name'] . '/';
-					require self::$template_dir . $data['tmpl_name'] . '.php';
+
+					self::$template_dir = config::getPath('templates') . '/' . $tmpl_name . '/';
+					require self::$template_dir . $tmpl_name . '.php';
 					self::$template_page  = $page;
 					self::$template_parts = $t_files;
 					self::$template_vars  = $vars;
-					self::getTemplate();
+					self::getTemplate($fast);
+					self::loadStyles($t_styles);
+					self::loadScripts($t_scripts);
 					self::parseTemplate();
 					
 					return self::$template;
+
 				} else {
 					throw new tmplException(
-						'Error template not found (' . './' . $data['tmpl_dir'] . '/' . $data['tmpl_name'] . '/' . $data['tmpl_name'] . '.php' .');'
+						'Error template not found ( ' . config::getPath('templates') . '/' . $tmpl_name . '/' . $tmpl_name . '.php );<br>'. __FILE__ .' ( '. __LINE__ . ' )'
 					);
 				}
 			}

@@ -39,13 +39,10 @@ if ( $try_module ) {
 	}
 }
 
-
 // выводим сформированнаый контент
 config::$global_cms_vars['PAGE'] = template::loadTemplate($request_template, config::$global_cms_vars);
 
 echo config::$global_cms_vars['PAGE'];
-
-
 
 
 if ( database::ping() === 1 ) {

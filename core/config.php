@@ -26,10 +26,23 @@ class config implements StorableObject
 	);
 
 
-	public static $template = [
-				'tmpl_dir'  => 'templates',
-				'tmpl_name' => 'Conversion',
-	];
+	public static $template = 'Conversion';
+
+	public static $dirs = [];
+
+	public static function setPath( $name, $value )
+	{
+		self::$dirs[$name] = $value;
+	}
+
+	public static function getPath( $name, $is_url = false )
+	{
+		if ( isset(self::$dirs[$name]) ) {
+			return ( $is_url ? self::$dirs[$name] : $_SERVER['DOCUMENT_ROOT'] . self::$dirs[$name] );
+		} else {
+			return false;
+		}
+	}
 
 
 	public static $s_url = true; // Семантические ссылки [true/false]
@@ -42,6 +55,18 @@ class config implements StorableObject
 
 	function __construct()
 	{
+		self::$dirs = [
+			'root' 		=> '/',
+			'core' 		=> '/core',
+			'libraries'	=> '/core/libraries',
+			'includes' 	=> '/includes',
+			'modules' 	=> '/includes/modules',
+			'plugins' 	=> '/includes/plugins',
+			'media' 	=> '/media',
+			'images' 	=> '/media/images',
+			'templates' => '/templates',
+		];
+
 		self::$global_cms_vars['SITE_NAME']  = self::$site_name;
 		self::$global_cms_vars['PAGE_TITLE'] = '';
 		self::$global_cms_vars['CONTENT'] 	 = '';
